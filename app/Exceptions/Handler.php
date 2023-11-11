@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 use Throwable;
 
 
@@ -30,8 +29,9 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         /* $this->reportable(function (Throwable $e) {
-            //
-        }); */
+            #code
+        });
+        */
 
         $this->renderable(function (NotFoundHttpException $e, Request $request) {
             if ($request->is('api/*')) {

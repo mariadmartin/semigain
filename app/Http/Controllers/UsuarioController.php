@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 
 class UsuarioController extends Controller
 {
-    // GET todas los Usuarios
+    // GET obtener todos los Usuarios
     public function index()
     {
         try {
@@ -22,7 +22,7 @@ class UsuarioController extends Controller
         }
     }
 
-    // POST - creacion Usuario
+    // POST - Creacion Usuario
     public function store(Request $request)
     {
         try {
@@ -42,7 +42,8 @@ class UsuarioController extends Controller
         }
     }
 
-    public function show(Usuario $usuario) // GET by ID - mostrar un usuario
+    // GET by ID - mostrar un usuario
+    public function show(Usuario $usuario)
     {
        try {
             $usuario = Usuario::findOrFail($usuario->id);
@@ -52,6 +53,7 @@ class UsuarioController extends Controller
        }
     }
 
+    // PUT - Actualizar un Usuario
     public function update(Request $request, Usuario $usuario)
     {
         try {
@@ -63,9 +65,10 @@ class UsuarioController extends Controller
                 'numero_socio' => 'required',
                 'fecha_alta' => 'required',
             ]);
+            $usuario = $usuario->update($request->all());
             return ApiResponse::success('Usuario actualizada correctamente', 200, $usuario);
         } catch (ModelNotFoundException $e) {
-            return ApiResponse::error('Categoria no encontrada ', 404);
+            return ApiResponse::error('Usuario no encontrada ', 404);
         } catch (Exception $e) {
             return ApiResponse::error('Error: ' . $e->getMessage(), 422);
         }
