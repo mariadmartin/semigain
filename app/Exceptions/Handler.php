@@ -38,7 +38,7 @@ class Handler extends ExceptionHandler
                 /* return response()->json([
                     'message' => 'Record not found.'
                 ], 404); */
-                return ApiResponse::error('Usuario no encontrado', 404);
+                return ApiResponse::error('Registro no encontrado', 404);
             }
         });
     }

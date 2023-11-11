@@ -25,6 +25,6 @@ use App\Http\Controllers\PagoController;
 }); */
 
 Route::apiResource('usuarios', UsuarioController::class);
-Route::apiResource('reservas', ReservaController::class);
-//Route::apiResource('pistas', UsuarioController::class);
-//Route::apiResource('pagos', UsuarioController::class);
+//Route::apiResource('reservas', ReservaController::class);
+Route::apiResource('pistas', PistaController::class);
+//Route::apiResource('pagos', PagoController::class);
