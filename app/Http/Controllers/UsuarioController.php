@@ -53,11 +53,7 @@ class UsuarioController extends Controller
        }
     }
 
-<<<<<<< HEAD
-    // PUT - Actualizar un Usuario
-=======
-    // PUT - actualizar usuario
->>>>>>> pistasController
+
     public function update(Request $request, Usuario $usuario)
     {
         try {
