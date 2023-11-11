@@ -52,6 +52,7 @@ class UsuarioController extends Controller
        }
     }
 
+    // PUT - actualizar usuario
     public function update(Request $request, Usuario $usuario)
     {
         try {
