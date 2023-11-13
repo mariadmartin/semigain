@@ -17,7 +17,21 @@ class ReservaController extends Controller
     {
         try {
             $reservas = Reserva::with('usuario', 'pista')->get();
-            return ApiResponse::success('Lista de reservas', 200, $reservas);
+            $reservaResponse = [];
+            foreach ($reservas as $reserva) {
+                $array= [
+                    'id'=> $reserva['id'],
+                    'fecha_reserva'=> $reserva['fecha_reserva'],
+                    'hora_reserva'=> $reserva['hora_reserva'],
+                    'tiene_luz'=> $reserva['tiene_luz'],
+                    'usuario_id'=> $reserva['usuario'],
+                    'pista_id'=> $reserva['pista'],
+                    'created_at'=> $reserva['created_at'],
+                    'updated_at'=> $reserva['updated_at'],
+                ];
+                array_push($reservaResponse, $array);
+            }
+            return ApiResponse::success('Lista de reservas', 200, $reservaResponse);
         } catch (Exception $e) {
             return ApiResponse::error('Error al obtener la lista de reservas: ' . $e->getMessage(), 500);
         }
