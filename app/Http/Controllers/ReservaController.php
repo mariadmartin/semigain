@@ -7,73 +7,87 @@ use Illuminate\Http\Request;
 use App\Http\Responses\ApiResponse;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
+use Spatie\FlareClient\Api;
 
 class ReservaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // GET - Listado de las reservas
     public function index()
     {
         try {
-            $reservas = Reserva::all();
+            $reservas = Reserva::with('usuario', 'pista')->get();
             return ApiResponse::success('Lista de reservas', 200, $reservas);
         } catch (Exception $e) {
             return ApiResponse::error('Error al obtener la lista de reservas: ' . $e->getMessage(), 500);
         }
     }
 
-    /**
-     * Store a newly created resource in storage. POST crear
-     */
+    // POST - Crear una reserva
     public function store(Request $request)
     {
         try {
+            request()->validate([
+                'fecha_reserva' => 'required',
+                'hora_reserva' => 'required',
+                'usuario_id' => 'required|exists:usuarios,id',
+                'pista_id' => 'required|exists:pistas,id',
+            ]);
             $reserva = Reserva::create($request->all());
             $reserva->create($request->all());
-            return ApiResponse::success('Reserva creada', 200, $reserva);
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::error('Error al crear reserva' . $e->getMessage(), 500);
+            return ApiResponse::success('Reserva creada', 201, $reserva);
+        } catch (ValidationException $e) {
+            return ApiResponse::error('Error al crear reserva: ' . $e->getMessage(), 422);
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // GET by ID
     public function show(Reserva $reserva)
     {
-        //
+        try {
+            //$reserva = Reserva::findOrFail($reserva->id);
+            $reserva = Reserva::with('usuario', 'pista')->findOrFail($reserva->id);
+            $reservaResponse = [
+                'id' => $reserva->id,
+                'fecha_reserva' => $reserva->fecha_reserva,
+                'hora_reserva' => $reserva->hora_reserva,
+                'tiene_luz' => $reserva->tiene_luz,
+                'usuario_id' => $reserva->usuario,
+                'pista_id' => $reserva->pista,
+            ];
+            return ApiResponse::success('Reserva encontrada: ', 200, $reservaResponse);
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Reserva no encontrada', 404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Reserva $reserva)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
+    //  PUT - Actualizar Reserva
     public function update(Request $request, Reserva $reserva)
     {
-        //
+        try {
+            $reserva = Reserva::findOrFail($reserva->id);
+            request()->validate([
+                'fecha_reserva' => 'required',
+                'hora_reserva' => 'required',
+                'usuario_id' => 'required|exists:usuarios,id',
+                'pista_id' => 'required|exists:pistas,id',
+            ]);
+            $reserva->update($request->all());
+            return ApiResponse::success('Reserva actualizada', 200, $reserva);
+        } catch (ValidationException $e) {
+            return ApiResponse::error('Error de Validacion: ', 422);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // DELETE - borrar registro
     public function destroy(Reserva $reserva)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        try {
+            $reserva = Reserva::findOrFail($reserva->id);
+            $reserva->delete();
+            return ApiResponse::success('Reserva borrada', 200, $reserva);
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Reserva no encontrada', 404);
+        }
     }
 }

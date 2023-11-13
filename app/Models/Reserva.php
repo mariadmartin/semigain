@@ -12,7 +12,7 @@ class Reserva extends Model
     use HasFactory;
 
     protected $fillable = [
-        'fecha_reserva', 'hora_reserva', 'tiene_luz', 'usuario_id'
+        'fecha_reserva', 'hora_reserva', 'tiene_luz', 'usuario_id', 'pista_id'
     ];
     protected $casts = [
         'fecha_reserva' => 'date:d-m-Y'
