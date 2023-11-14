@@ -16,18 +16,19 @@ class ReservaController extends Controller
     public function index()
     {
         try {
-            $reservas = Reserva::with('usuario', 'pista')->get();
+            $reservas = Reserva::with('usuario', 'pista', 'pago')->get();
             $reservaResponse = [];
             foreach ($reservas as $reserva) {
-                $array= [
-                    'id'=> $reserva['id'],
-                    'fecha_reserva'=> $reserva['fecha_reserva'],
-                    'hora_reserva'=> $reserva['hora_reserva'],
-                    'tiene_luz'=> $reserva['tiene_luz'],
-                    'usuario_id'=> $reserva['usuario'],
-                    'pista_id'=> $reserva['pista'],
-                    'created_at'=> $reserva['created_at'],
-                    'updated_at'=> $reserva['updated_at'],
+                $array = [
+                    'id' => $reserva['id'],
+                    'fecha_reserva' => $reserva['fecha_reserva'],
+                    'hora_reserva' => $reserva['hora_reserva'],
+                    'tiene_luz' => $reserva['tiene_luz'],
+                    'usuario' => $reserva['usuario'],
+                    'pista' => $reserva['pista'],
+                    'pago' => $reserva['pago'],
+                    //'created_at'=> $reserva['created_at'],
+                    //'updated_at'=> $reserva['updated_at'],
                 ];
                 array_push($reservaResponse, $array);
             }
@@ -60,14 +61,15 @@ class ReservaController extends Controller
     {
         try {
             //$reserva = Reserva::findOrFail($reserva->id);
-            $reserva = Reserva::with('usuario', 'pista')->findOrFail($reserva->id);
+            $reserva = Reserva::with('usuario', 'pista', 'pago')->findOrFail($reserva->id);
             $reservaResponse = [
                 'id' => $reserva->id,
                 'fecha_reserva' => $reserva->fecha_reserva,
                 'hora_reserva' => $reserva->hora_reserva,
                 'tiene_luz' => $reserva->tiene_luz,
-                'usuario_id' => $reserva->usuario,
-                'pista_id' => $reserva->pista,
+                'usuario' => $reserva->usuario,
+                'pista' => $reserva->pista,
+                'pago' => $reserva->pago,
             ];
             return ApiResponse::success('Reserva encontrada: ', 200, $reservaResponse);
         } catch (ModelNotFoundException $e) {
