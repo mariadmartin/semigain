@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('municipio', 50)->nullable();
             $table->string('provincia', 50)->nullable();
             $table->string('imagen_perfil', 100)->nullable();
-            $table->string('email', 100);
+            $table->string('email', 100)->unique();
             $table->string('numero_socio')->unique();
             $table->dateTime('fecha_alta');
             $table->dateTime('fecha_baja')->nullable();

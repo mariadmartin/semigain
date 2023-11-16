@@ -27,12 +27,11 @@ class UsuarioController extends Controller
     {
         try {
             request()->validate([
-                'nombre' => 'required',
-                'apellidos' => 'required',
-                'email' => 'required',
-                'numero_socio' => 'required',
+                'nombre' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+                'apellidos' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+                'email' => 'required|email:rfc,dns|unique:usuarios,email',
+                'numero_socio' => 'required|unique:usuarios',
                 'fecha_alta' => 'required',
-
             ]);
             $usuario = Usuario::create($request->all());
             return ApiResponse::success('Usuario creado', 200, $usuario);
@@ -45,23 +44,23 @@ class UsuarioController extends Controller
     // GET by ID - mostrar un usuario
     public function show(Usuario $usuario)
     {
-       try {
+        try {
             $usuario = Usuario::findOrFail($usuario->id);
             return ApiResponse::success('Usuario obtenido', 200, $usuario);
-       } catch (ModelNotFoundException $e) {
-            return ApiResponse::error('Usuario no encontrado:  '.$e->getMessage(), 404);
-       }
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Usuario no encontrado:  ' . $e->getMessage(), 404);
+        }
     }
 
-
+    // PUT - Actualizar usuario
     public function update(Request $request, Usuario $usuario)
     {
         try {
             $usuario = Usuario::findOrFail($usuario->id);
             request()->validate([
-                'nombre' => 'required',
-                'apellidos' => 'required',
-                'email' => 'required',
+                'nombre' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+                'apellidos' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+                'email' => 'required|email:rfc,dns',
                 'numero_socio' => 'required',
                 'fecha_alta' => 'required',
             ]);
@@ -74,12 +73,13 @@ class UsuarioController extends Controller
         }
     }
 
+    // DELETE - borrar usuario
     public function destroy(Usuario $usuario)
     {
         try {
             $usuario = Usuario::findOrFail($usuario->id);
             $usuario->delete();
-            return ApiResponse::success('Usuario borrado',200, $usuario);
+            return ApiResponse::success('Usuario borrado', 200, $usuario);
         } catch (ModelNotFoundException $e) {
             return ApiResponse::error('Usuario no encontrada ', 404);
         }

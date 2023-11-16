@@ -49,7 +49,7 @@ class ReservaController extends Controller
                 'pista_id' => 'required|exists:pistas,id',
             ]);
             $reserva = Reserva::create($request->all());
-            $reserva->create($request->all());
+            //$reserva->create($request->all());
             return ApiResponse::success('Reserva creada', 201, $reserva);
         } catch (ValidationException $e) {
             return ApiResponse::error('Error al crear reserva: ' . $e->getMessage(), 422);
@@ -84,7 +84,7 @@ class ReservaController extends Controller
             $reserva = Reserva::findOrFail($reserva->id);
             request()->validate([
                 'fecha_reserva' => 'required',
-                'hora_reserva' => 'required',
+                'hora_reserva' => 'required|string',
                 'usuario_id' => 'required|exists:usuarios,id',
                 'pista_id' => 'required|exists:pistas,id',
             ]);
@@ -92,6 +92,8 @@ class ReservaController extends Controller
             return ApiResponse::success('Reserva actualizada', 200, $reserva);
         } catch (ValidationException $e) {
             return ApiResponse::error('Error de Validacion: ', 422);
+        } catch (\Exception $e) {
+            return ApiResponse::error('Error: ' . $e->getMessage(), 500);
         }
     }
 
