@@ -29,9 +29,11 @@ class UsuarioController extends Controller
             request()->validate([
                 'nombre' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
                 'apellidos' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+                'sexo' => 'regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
                 'email' => 'required|email:rfc,dns|unique:usuarios,email',
                 'numero_socio' => 'required|unique:usuarios',
                 'fecha_alta' => 'required',
+                'es_admin' => 'required|string|min:1|max:2'
             ]);
             $usuario = Usuario::create($request->all());
             return ApiResponse::success('Usuario creado', 200, $usuario);
@@ -58,11 +60,12 @@ class UsuarioController extends Controller
         try {
             $usuario = Usuario::findOrFail($usuario->id);
             request()->validate([
-                'nombre' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
-                'apellidos' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
-                'email' => 'required|email:rfc,dns',
-                'numero_socio' => 'required',
-                'fecha_alta' => 'required',
+                'nombre' => 'regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+                'apellidos' => 'regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+                'sexo' => 'regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+                'email' => 'email:rfc,dns',
+
+                'es_admin' => 'string|min:1|max:2'
             ]);
             $usuario = $usuario->update($request->all());
             return ApiResponse::success('Usuario actualizada correctamente', 200, $usuario);

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ReservaController;
@@ -24,7 +25,18 @@ use App\Http\Controllers\PagoController;
     return $request->user();
 }); */
 
-Route::apiResource('usuarios', UsuarioController::class);
-Route::apiResource('reservas', ReservaController::class);
-Route::apiResource('pistas', PistaController::class);
-Route::apiResource('pagos', PagoController::class);
+//ruta de registro
+Route::post('auth/register', [AuthController::class, 'create']);
+//ruta login
+Route::post('auth/login', [AuthController::class, 'login']);
+
+
+// rutas protegidas por token
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('usuarios', UsuarioController::class);
+    Route::apiResource('reservas', ReservaController::class);
+    Route::apiResource('pistas', PistaController::class);
+    Route::apiResource('pagos', PagoController::class);
+    //para el logout
+    Route::get('auth/logout', [AuthController::class, 'logout']);
+});
