@@ -16,9 +16,9 @@ return new class extends Migration
             $table->decimal('cantidad', 8, 2);
             $table->string('pagado', 2);
             $table->unsignedBigInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->foreign('usuario_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('reserva_id');
-            $table->foreign('reserva_id')->references('id')->on('reservas')->onDelete('cascade');
+            $table->foreign('reserva_id')->references('id')->on('reservas');
             $table->timestamps();
         });
     }

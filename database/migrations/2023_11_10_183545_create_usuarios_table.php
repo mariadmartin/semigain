@@ -23,9 +23,10 @@ return new class extends Migration
             $table->string('imagen_perfil', 100)->nullable();
             $table->string('email', 100)->unique();
             $table->string('numero_socio')->unique();
-            $table->dateTime('fecha_alta');
+            $table->dateTime('fecha_alta')->nullable();
             $table->dateTime('fecha_baja')->nullable();
             $table->string('es_admin', 2);
+            $table->string('contrasenia', 100);
             $table->timestamps();
         });
     }
